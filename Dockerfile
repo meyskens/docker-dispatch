@@ -1,5 +1,5 @@
 ARG imagearch=amd64
-FROM multiarch/centos:${imagearch}
+FROM multiarch/centos:${imagearch}-clean
 
 ARG dispatch_version
 ARG imagearch=amd64
