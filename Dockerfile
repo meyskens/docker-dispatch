@@ -12,8 +12,8 @@ RUN git clone https://github.com/innovate-technologies/Dispatch.git /go/src/gith
 WORKDIR /go/src/github.com/innovate-technologies/Dispatch
 
 RUN glide install
-RUN cd dispatchd && GOARCH=${goarch} go build ./ && cd ..
-RUN cd dispatchctl && GOARCH=${goarch} go build ./ && cd ..
+RUN cd dispatchd && GOARCH=${goarch} go build -v ./ && cd ..
+RUN cd dispatchctl && GOARCH=${goarch} go build -v ./ && cd ..
 
 
 ARG imagearch=amd64
