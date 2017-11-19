@@ -1,3 +1,21 @@
+FROM golang as build
+
+ARG goarch
+ENV GOARM=6
+
+# add things we need
+RUN go get -v github.com/Masterminds/glide
+
+RUN mkdir /go/src/github.com/innovate-technologies/Dispatch
+RUN git clone https://github.com/innovate-technologies/Dispatch.git /go/src/github.com/innovate-technologies/Dispatch
+
+WORKDIR /go/src/github.com/innovate-technologies/Dispatch
+
+RUN glide install
+RUN cd dispatchd && GOARCH=${goarch} go build ./ && cd ..
+RUN cd dispatchctl && GOARCH=${goarch} go build ./ && cd ..
+
+
 ARG imagearch=amd64
 FROM ${imagearch}/centos:7
 
@@ -19,23 +37,8 @@ VOLUME [ "/sys/fs/cgroup" ]
 RUN curl https://get.docker.com | bash
 
 COPY dispatchd.service /etc/systemd/system/dispatchd.service
-RUN case "${ARCH}" in                                                                                 \
-    armv7l|armhf|arm)                                                                                 \
-      curl -Ls https://github.com/innovate-technologies/Dispatch/releases/download/${dispatch_version}/dispatchctl-linux-arm > /usr/bin/dispatchctl && \
-      chmod +x /usr/bin/dispatchctl                                                                   \
-      ;;                                                                                              \
-    amd64|x86_64)                                                                                     \
-      curl -Ls https://github.com/innovate-technologies/Dispatch/releases/download/${dispatch_version}/dispatchctl-linux-amd64 > /usr/bin/dispatchctl && \
-      chmod +x /usr/bin/dispatchctl                                                                   \
-      ;;                                                                                              \
-    arm64|aarch64)                                                                                    \
-      curl -Ls https://github.com/innovate-technologies/Dispatch/releases/download/${dispatch_version}/dispatchctl-linux-arm64 > /usr/bin/dispatchctl && \
-      chmod +x /usr/bin/dispatchctl                                                                   \
-      ;;                                                                                              \
-    *)                                                                                                \
-      echo "Unhandled architecture: ${ARCH}."; exit 1;                                                \
-      ;;                                                                                              \
-    esac                                                                                              
+COPY --from=build /go/src/github.com/innovate-technologies/Dispatch/dispatchd/dispatchd  /usr/bin/dispatchd 
+COPY --from=build /go/src/github.com/innovate-technologies/Dispatch/dispatchd/dispatchctl  /usr/bin/dispatchctl                                                                                         
 
 RUN systemctl enable docker.service
 RUN systemctl enable dispatchd.service
