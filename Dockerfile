@@ -1,4 +1,4 @@
-ARG imagearch
+ARG imagearch=amd64
 FROM ${imagearch}/centos:7
 
 ARG dispatch_version

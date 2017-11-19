@@ -6,14 +6,14 @@ env:
         - QEMU_VER=v2.9.1
         - DOCKER_REPO=maartje/dispatch
     matrix:
-        - ARCH=amd64    VERSION=0.0.7    QEMU_ARCH=x86_64   TAG_VERSION=0.0.7   DOCKER_ARCH_BASE=amd64/
-        - ARCH=armhf    VERSION=0.0.7    QEMU_ARCH=arm      TAG_VERSION=0.0.7   DOCKER_ARCH_BASE=armhf/
+        - ARCH=amd64    VERSION=0.0.7    QEMU_ARCH=x86_64   TAG_VERSION=0.0.7   DOCKER_ARCH_BASE=amd64
+        - ARCH=armhf    VERSION=0.0.7    QEMU_ARCH=arm      TAG_VERSION=0.0.7   DOCKER_ARCH_BASE=armhf
 
-        - ARCH=amd64    VERSION=0.0.8    QEMU_ARCH=x86_64   TAG_VERSION=0.0.8   DOCKER_ARCH_BASE=amd64/
-        - ARCH=armhf    VERSION=0.0.8    QEMU_ARCH=arm      TAG_VERSION=0.0.8   DOCKER_ARCH_BASE=armhf/
+        - ARCH=amd64    VERSION=0.0.8    QEMU_ARCH=x86_64   TAG_VERSION=0.0.8   DOCKER_ARCH_BASE=amd64
+        - ARCH=armhf    VERSION=0.0.8    QEMU_ARCH=arm      TAG_VERSION=0.0.8   DOCKER_ARCH_BASE=armhf
 
-        - ARCH=amd64    VERSION=0.0.8    QEMU_ARCH=x86_64   TAG_VERSION=latest  DOCKER_ARCH_BASE=amd64/
-        - ARCH=armhf    VERSION=0.0.8    QEMU_ARCH=arm      TAG_VERSION=latest  aDOCKER_ARCH_BASE=armhf/
+        - ARCH=amd64    VERSION=0.0.8    QEMU_ARCH=x86_64   TAG_VERSION=latest  DOCKER_ARCH_BASE=amd64
+        - ARCH=armhf    VERSION=0.0.8    QEMU_ARCH=arm      TAG_VERSION=latest  aDOCKER_ARCH_BASE=armhf
 
 before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
