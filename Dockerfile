@@ -2,6 +2,7 @@ ARG imagearch=amd64
 FROM ${imagearch}/centos:7
 
 ARG dispatch_version
+ARG imagearch=amd64
 
 # setup systemd
 ENV container docker 
@@ -19,7 +20,7 @@ VOLUME [ "/sys/fs/cgroup" ]
 RUN curl https://get.docker.com | bash
 
 COPY dispatchd.service /etc/systemd/system/dispatchd.service
-RUN case "${ARCH}" in                                                                                 \
+RUN case "${imagearch}" in                                                                                 \
     armv7l|armhf|arm)                                                                                 \
       curl -Ls https://github.com/innovate-technologies/Dispatch/releases/download/${dispatch_version}/dispatchctl-linux-arm > /usr/bin/dispatchctl && \
       chmod +x /usr/bin/dispatchctl                                                                   \
@@ -33,7 +34,7 @@ RUN case "${ARCH}" in                                                           
       chmod +x /usr/bin/dispatchctl                                                                   \
       ;;                                                                                              \
     *)                                                                                                \
-      echo "Unhandled architecture: ${ARCH}."; exit 1;                                                \
+      echo "Unhandled architecture: ${imagearch}."; exit 1;                                                \
       ;;                                                                                              \
     esac                                                                                              
 
