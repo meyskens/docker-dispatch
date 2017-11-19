@@ -1,10 +1,12 @@
 ARG imagearch=amd64
-FROM multiarch/centos:${imagearch}-clean
+FROM multiarch/debian-debootstrap:${imagearch}-stretch
 
 ARG dispatch_version
 ARG imagearch=amd64
 
 # setup systemd
+RUN apt-get update && apt-get install -y systemd
+
 ENV container docker 
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \ 
     rm -f /lib/systemd/system/multi-user.target.wants/*;\
