@@ -7,7 +7,7 @@ env:
         - DOCKER_REPO=maartje/dispatch
     matrix:
         - ARCH=amd64    QEMU_ARCH=x86_64   TAG_VERSION=master   DOCKER_ARCH_BASE=amd64  GO_ARCH=amd64
-        - ARCH=armhf    QEMU_ARCH=arm      TAG_VERSION=master   DOCKER_ARCH_BASE=armhf  GO_ARCH=arm
+        - ARCH=armhf    QEMU_ARCH=arm      TAG_VERSION=master   DOCKER_ARCH_BASE=arm32v6  GO_ARCH=arm
 
 before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
