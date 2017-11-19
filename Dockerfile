@@ -1,5 +1,5 @@
 ARG imagearch=amd64
-FROM ${imagearch}/centos:7
+FROM multiarch/centos:${imagearch}
 
 ARG dispatch_version
 ARG imagearch=amd64
