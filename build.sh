@@ -38,4 +38,4 @@ if [ -n "${QEMU_ARCH}" ]; then
     tar -xvf x86_64_qemu-${QEMU_ARCH}-static.tar.gz -C $ROOTFS/usr/bin/
 fi
 
-docker build --build-arg imagearch="${DOCKER_ARCH_BASE=}" --build-arg dispatch_version="${VERSION}" -t "${DOCKER_REPO}:${ARCH}-${TAG_VERSION}" ./
+docker build --build-arg imagearch="${DOCKER_ARCH_BASE}" --build-arg dispatch_version="${VERSION}" -t "${DOCKER_REPO}:${ARCH}-${TAG_VERSION}" ./
