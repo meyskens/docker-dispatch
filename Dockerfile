@@ -5,7 +5,7 @@ ARG dispatch_version
 ARG imagearch=amd64
 
 # setup systemd
-RUN apt-get update && apt-get install -y systemd
+RUN apt-get update && apt-get install -y systemd curl
 
 ENV container docker 
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \ 
