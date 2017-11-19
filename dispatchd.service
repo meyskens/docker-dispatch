@@ -1,0 +1,11 @@
+[Unit]
+Description=Dispatchd
+
+[Service]
+EnvironmentFile=/run/metadata/dispatch
+ExecStart = /usr/bin/dispatchd  
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
