@@ -6,7 +6,7 @@ ENV GOARM=6
 # add things we need
 RUN go get -v github.com/Masterminds/glide
 
-RUN mkdir /go/src/github.com/innovate-technologies/Dispatch
+RUN mkdir -p /go/src/github.com/innovate-technologies/Dispatch
 RUN git clone https://github.com/innovate-technologies/Dispatch.git /go/src/github.com/innovate-technologies/Dispatch
 
 WORKDIR /go/src/github.com/innovate-technologies/Dispatch
