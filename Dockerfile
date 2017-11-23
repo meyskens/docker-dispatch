@@ -17,9 +17,7 @@ RUN cd dispatchctl && GOARCH=${goarch} go build -v ./ && cd ..
 
 
 ARG imagearch=amd64
-FROM ${imagearch}/centos:7
-
-ARG dispatch_version
+FROM multiarch/debian-debootstrap:${imagearch}-stretch
 
 # setup systemd
 ENV container docker 
