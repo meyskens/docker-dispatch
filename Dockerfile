@@ -36,7 +36,7 @@ RUN curl https://get.docker.com | bash
 
 COPY dispatchd.service /etc/systemd/system/dispatchd.service
 COPY --from=build /go/src/github.com/innovate-technologies/Dispatch/dispatchd/dispatchd  /usr/bin/dispatchd 
-COPY --from=build /go/src/github.com/innovate-technologies/Dispatch/dispatchd/dispatchctl  /usr/bin/dispatchctl                                                                                         
+COPY --from=build /go/src/github.com/innovate-technologies/Dispatch/dispatchctl/dispatchctl  /usr/bin/dispatchctl                                                                                         
 
 RUN systemctl enable docker.service
 RUN systemctl enable dispatchd.service
