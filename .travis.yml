@@ -7,7 +7,7 @@ env:
         - DOCKER_REPO=maartje/dispatch
     matrix:
         - ARCH=amd64    QEMU_ARCH=x86_64   TAG_VERSION=master   DOCKER_ARCH_BASE=amd64  GO_ARCH=amd64
-        - ARCH=armhf    QEMU_ARCH=arm      TAG_VERSION=master   DOCKER_ARCH_BASE=arm32v6  GO_ARCH=arm
+        - ARCH=armhf    QEMU_ARCH=arm      TAG_VERSION=master   DOCKER_ARCH_BASE=armhf  GO_ARCH=arm
 
 before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -19,6 +19,7 @@ before_script:
     - sudo apt-get -y install qemu-user-static
     - docker run --rm --privileged multiarch/qemu-user-static:register
 script:
+    - sed -i 's/${imagearch}/'$DOCKER_ARCH_BASE'/g' Dockerfile
     - sudo ./build.sh --arch="$ARCH" --qemuarch="$QEMU_ARCH" --qemuversion="$QEMU_VER" --repo="$DOCKER_REPO" --dockerarchbase="$DOCKER_ARCH_BASE" --tagversion="$TAG_VERSION" --goarch="$GO_ARCH"
 after_success:
     - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"

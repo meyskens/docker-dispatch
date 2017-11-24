@@ -16,7 +16,7 @@ RUN cd dispatchd && GOARCH=${goarch} go build -v ./ && cd ..
 RUN cd dispatchctl && GOARCH=${goarch} go build -v ./ && cd ..
 
 
-ARG imagearch=amd64
+ARG imagearch
 FROM multiarch/debian-debootstrap:${imagearch}-stretch
 
 # setup systemd
