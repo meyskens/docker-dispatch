@@ -49,16 +49,7 @@ RUN cd /lib/systemd/system/sysinit.target.wants/ && \
 		systemctl set-default multi-user.target || true
 RUN sed -ri /etc/systemd/journald.conf \
 			-e 's!^#?Storage=.*!Storage=volatile!'
-ADD container-boot.service /etc/systemd/system/container-boot.service
-RUN mkdir -p /etc/container-boot.d && \
-		sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-		echo "LANG=en_US.UTF-8" >> /etc/default/locale && \
-		echo "export LC_ALL=en_US.UTF-8" >> /etc/bash.bashrc && \
-		echo "export LANG=en_US.UTF-8" >> /etc/bash.bashrc && \
-		echo "export LANGUAGE=en_US.UTF-8" >> /etc/bash.bashrc && \
-		/usr/sbin/locale-gen && \
-		echo "alias ll='ls -l'" >> /root/.bashrc && \
-		systemctl enable container-boot.service && systemctl mask cgproxy
+
 VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
 # add docker
