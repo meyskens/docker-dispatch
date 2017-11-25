@@ -20,19 +20,46 @@ ARG imagearch
 FROM multiarch/debian-debootstrap:${imagearch}-stretch
 
 # setup systemd
-RUN apt-get update && apt-get install -y systemd curl
+RUN apt-get -y update && apt-get -y upgrade && apt-get clean && \
+		apt-get -y install apt-utils lsb-release curl git cron at logrotate rsyslog \
+			unattended-upgrades ssmtp lsof locales procps \
+			initscripts libsystemd0 libudev1 systemd sysvinit-utils udev util-linux && \
+		dpkg-reconfigure locales && \
+		apt-get clean
 
 # setup systemd
 ENV container docker 
-RUN /bin/bash -c '(cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \ 
-    rm -f /lib/systemd/system/multi-user.target.wants/*;\
-    rm -f /etc/systemd/system/*.wants/*;\
-    rm -f /lib/systemd/system/local-fs.target.wants/*; \
-    rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-    rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-    rm -f /lib/systemd/system/basic.target.wants/*;\
-    rm -f /lib/systemd/system/anaconda.target.wants/*;' 
-VOLUME [ "/sys/fs/cgroup" ] 
+RUN cd /lib/systemd/system/sysinit.target.wants/ && \
+		ls | grep -v systemd-tmpfiles-setup.service | xargs rm -f && \
+		rm -f /lib/systemd/system/sockets.target.wants/*udev* && \
+		systemctl mask -- \
+			tmp.mount \
+			etc-hostname.mount \
+			etc-hosts.mount \
+			etc-resolv.conf.mount \
+			-.mount \
+			swap.target \
+			getty.target \
+			getty-static.service \
+			dev-mqueue.mount \
+			systemd-tmpfiles-setup-dev.service \
+			systemd-remount-fs.service \
+			systemd-ask-password-wall.path \
+			systemd-logind.service && \
+		systemctl set-default multi-user.target || true
+RUN sed -ri /etc/systemd/journald.conf \
+			-e 's!^#?Storage=.*!Storage=volatile!'
+ADD container-boot.service /etc/systemd/system/container-boot.service
+RUN mkdir -p /etc/container-boot.d && \
+		sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+		echo "LANG=en_US.UTF-8" >> /etc/default/locale && \
+		echo "export LC_ALL=en_US.UTF-8" >> /etc/bash.bashrc && \
+		echo "export LANG=en_US.UTF-8" >> /etc/bash.bashrc && \
+		echo "export LANGUAGE=en_US.UTF-8" >> /etc/bash.bashrc && \
+		/usr/sbin/locale-gen && \
+		echo "alias ll='ls -l'" >> /root/.bashrc && \
+		systemctl enable container-boot.service && systemctl mask cgproxy
+VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
 
 # add docker
 RUN curl https://get.docker.com | bash
@@ -46,4 +73,4 @@ RUN systemctl enable dispatchd.service
 
 VOLUME [ "/run/metadata/dispatch" ]
 
-CMD ["/usr/sbin/init"]
+CMD ["/lib/systemd/systemd"]
